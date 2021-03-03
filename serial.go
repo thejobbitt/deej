@@ -74,17 +74,26 @@ func (sio *SerialIO) Start() error {
 		return errors.New("serial: connection already active")
 	}
 
+	// set minimum read size according to platform (0 for windows, 1 for linux)
+	// this prevents a rare bug on windows where serial reads get congested,
+	// resulting in significant lag
+	minimumReadSize := 0
+	if util.Linux() {
+		minimumReadSize = 1
+	}
+
 	sio.connOptions = serial.OpenOptions{
 		PortName:        sio.deej.config.ConnectionInfo.COMPort,
 		BaudRate:        uint(sio.deej.config.ConnectionInfo.BaudRate),
 		DataBits:        8,
 		StopBits:        1,
-		MinimumReadSize: 1,
+		MinimumReadSize: uint(minimumReadSize),
 	}
 
 	sio.logger.Debugw("Attempting serial connection",
 		"comPort", sio.connOptions.PortName,
-		"baudRate", sio.connOptions.BaudRate)
+		"baudRate", sio.connOptions.BaudRate,
+		"minReadSize", minimumReadSize)
 
 	var err error
 	sio.conn, err = serial.Open(sio.connOptions)
@@ -197,13 +206,19 @@ func (sio *SerialIO) readLine(logger *zap.SugaredLogger, reader *bufio.Reader) c
 			line, err := reader.ReadString('\n')
 			if err != nil {
 
-				// we probably don't need to log this, it'll happen once and the read loop will stop
-				// logger.Warnw("Failed to read line from serial", "error", err, "line", line)
+				if sio.deej.Verbose() {
+					logger.Warnw("Failed to read line from serial", "error", err, "line", line)
+				}
+
+				// just ignore the line, the read loop will stop after this
 				return
 			}
 
-			// no reason to log here, just deliver the line to the channel
-			// logger.Debugw("Read new line", "line", line)
+			if sio.deej.Verbose() {
+				logger.Debugw("Read new line", "line", line)
+			}
+
+			// deliver the line to the channel
 			ch <- line
 		}
 	}()
@@ -265,7 +280,7 @@ func (sio *SerialIO) handleLine(logger *zap.SugaredLogger, line string) {
 		}
 
 		// check if it changes the desired state (could just be a jumpy raw slider value)
-		if util.SignificantlyDifferent(sio.currentSliderPercentValues[sliderIdx], normalizedScalar) {
+		if util.SignificantlyDifferent(sio.currentSliderPercentValues[sliderIdx], normalizedScalar, sio.deej.config.NoiseReductionLevel) {
 
 			// if it does, update the saved value and create a move event
 			sio.currentSliderPercentValues[sliderIdx] = normalizedScalar
@@ -275,8 +290,9 @@ func (sio *SerialIO) handleLine(logger *zap.SugaredLogger, line string) {
 				PercentValue: normalizedScalar,
 			})
 
-			// like in other places, this is too much to log - we'll log actual target volume events later
-			// logger.Debugw("Slider moved", "event", moveEvents[len(moveEvents)-1])
+			if sio.deej.Verbose() {
+				logger.Debugw("Slider moved", "event", moveEvents[len(moveEvents)-1])
+			}
 		}
 	}
 

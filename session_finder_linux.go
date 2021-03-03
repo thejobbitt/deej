@@ -24,8 +24,8 @@ func newSessionFinder(logger *zap.SugaredLogger) (SessionFinder, error) {
 	}
 
 	request := proto.SetClientName{
-		Props: map[string]string{
-			"application.name": "deej",
+		Props: proto.PropList{
+			"application.name": proto.PropListString("deej"),
 		},
 	}
 	reply := proto.SetClientNameReply{}
@@ -49,14 +49,21 @@ func newSessionFinder(logger *zap.SugaredLogger) (SessionFinder, error) {
 func (sf *paSessionFinder) GetAllSessions() ([]Session, error) {
 	sessions := []Session{}
 
-	// get the master session
-	master, err := sf.getMasterSession()
-	if err != nil {
-		sf.logger.Warnw("Failed to get master audio session", "error", err)
-		return nil, fmt.Errorf("get master audio session: %w", err)
+	// get the master sink session
+	masterSink, err := sf.getMasterSinkSession()
+	if err == nil {
+		sessions = append(sessions, masterSink)
+	} else {
+		sf.logger.Warnw("Failed to get master audio sink session", "error", err)
 	}
 
-	sessions = append(sessions, master)
+	// get the master source session
+	masterSource, err := sf.getMasterSourceSession()
+	if err == nil {
+		sessions = append(sessions, masterSource)
+	} else {
+		sf.logger.Warnw("Failed to get master audio source session", "error", err)
+	}
 
 	// enumerate sink inputs and add sessions along the way
 	if err := sf.enumerateAndAddSessions(&sessions); err != nil {
@@ -78,7 +85,7 @@ func (sf *paSessionFinder) Release() error {
 	return nil
 }
 
-func (sf *paSessionFinder) getMasterSession() (Session, error) {
+func (sf *paSessionFinder) getMasterSinkSession() (Session, error) {
 	request := proto.GetSinkInfo{
 		SinkIndex: proto.Undefined,
 	}
@@ -89,10 +96,27 @@ func (sf *paSessionFinder) getMasterSession() (Session, error) {
 		return nil, fmt.Errorf("get master sink info: %w", err)
 	}
 
-	// create the master session
-	master := newMasterSession(sf.sessionLogger, sf.client, reply.SinkIndex, reply.Channels)
+	// create the master sink session
+	sink := newMasterSession(sf.sessionLogger, sf.client, reply.SinkIndex, reply.Channels, true)
 
-	return master, nil
+	return sink, nil
+}
+
+func (sf *paSessionFinder) getMasterSourceSession() (Session, error) {
+	request := proto.GetSourceInfo{
+		SourceIndex: proto.Undefined,
+	}
+	reply := proto.GetSourceInfoReply{}
+
+	if err := sf.client.Request(&request, &reply); err != nil {
+		sf.logger.Warnw("Failed to get master source info", "error", err)
+		return nil, fmt.Errorf("get master source info: %w", err)
+	}
+
+	// create the master source session
+	source := newMasterSession(sf.sessionLogger, sf.client, reply.SourceIndex, reply.Channels, false)
+
+	return source, nil
 }
 
 func (sf *paSessionFinder) enumerateAndAddSessions(sessions *[]Session) error {
@@ -115,7 +139,7 @@ func (sf *paSessionFinder) enumerateAndAddSessions(sessions *[]Session) error {
 		}
 
 		// create the deej session object
-		newSession := newPASession(sf.sessionLogger, sf.client, info.SinkInputIndex, info.Channels, name)
+		newSession := newPASession(sf.sessionLogger, sf.client, info.SinkInputIndex, info.Channels, name.String())
 
 		// add it to our slice
 		*sessions = append(*sessions, newSession)

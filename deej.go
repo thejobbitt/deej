@@ -28,10 +28,11 @@ type Deej struct {
 
 	stopChannel chan bool
 	version     string
+	verbose     bool
 }
 
 // NewDeej creates a Deej instance
-func NewDeej(logger *zap.SugaredLogger) (*Deej, error) {
+func NewDeej(logger *zap.SugaredLogger, verbose bool) (*Deej, error) {
 	logger = logger.Named("deej")
 
 	notifier, err := NewToastNotifier(logger)
@@ -51,6 +52,7 @@ func NewDeej(logger *zap.SugaredLogger) (*Deej, error) {
 		notifier:    notifier,
 		config:      config,
 		stopChannel: make(chan bool),
+		verbose:     verbose,
 	}
 
 	serial, err := NewSerialIO(d, logger)
@@ -118,8 +120,12 @@ func (d *Deej) SetVersion(version string) {
 	d.version = version
 }
 
-func (d *Deej) setupInterruptHandler() {
+// Verbose returns a boolean indicating whether deej is running in verbose mode
+func (d *Deej) Verbose() bool {
+	return d.verbose
+}
 
+func (d *Deej) setupInterruptHandler() {
 	interruptChannel := util.SetupCloseHandler()
 
 	go func() {
