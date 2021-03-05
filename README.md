@@ -31,6 +31,16 @@ https://www.amazon.com/gp/product/B012YZ2Q3W/ref=ppx_yo_dt_b_search_asin_title?i
 Right angle micro USB, connect directly into the monitor if supported.
 https://www.amazon.com/gp/product/B003YKX6WC/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1
 
+![VHB](photos/VHB_tape.jpg)
+
+Tape to attach to monitor.
+https://www.amazon.com/gp/product/B07K4SFP4D/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1
+
+![M3 Bolt](photos/m3_bolt.jpg)
+
+m3 x 8mm Screw to hold the electronics in the housing.
+https://www.mcmaster.com/91292A112/
+
 ## Electronics Assembly
 
 ![Front](photos/circuit_board_front.jpg)
@@ -43,11 +53,21 @@ Soild wire used for all connections. There is a bit of assembly order. Make the 
 
 ![Case Render](renders/case_assembly.png)
 
+![Case Render Back](renders/case_assembly_back.png)
+
+![Print](photos/print.jpg)
+
+All parts are designed with printing in mind and do not need any support.
+
 ![Brackets](renders/brackets.png)
+
+The Upper Bracket is attached to the monitor with VHL tape. I used the 3M VBL 5952. The Lower Bracket uses two m3 x 8mm screws to hold the electronics in the housing.
 
 ![Knob](renders/knob.png)
 
 ![Icon](renders/icon_volume.png)
+
+Both the knob and the icons are designed to print two colors using a single filament change.
 
 ## Info about the deej project
 
