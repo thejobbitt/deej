@@ -1,3 +1,12 @@
+# Super Compact Monitor Mount
+
+![SCMM Build](photos/finished.jpg)
+
+teensy https://www.pjrc.com/store/teensy32.html
+
+perf https://www.amazon.com/gp/product/B012YZ2Q3W/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1
+usb https://www.amazon.com/gp/product/B003YKX6WC/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1
+pot https://www.digikey.com/en/products/detail/tt-electronics-bi/P110KH-0Y20BR10K/2408865
 # deej
 
 deej is an **open-source hardware volume mixer** for Windows and Linux PCs. It lets you use real-life sliders (like a DJ!) to **seamlessly control the volumes of different apps** (such as your music player, the game you're playing and your voice chat session) without having to stop what you're doing.
