@@ -11,19 +11,19 @@
 
 ## Parts and Pieces
 
-SCMM is built on a proto board using 10k potentiometers and a Teensy 3.2 Micro. (SCMM was built with parts I had, I suggest you use the Teensy LC if you are ordering new)
-
 ![Teensy](photos/teensy32.jpg)
 
+Teensy is my favorite platform, works very well for keyboards and very full featured for the price. If you want to save some money on the build go with the recommended Arduino Nano, Pro Micro or Uno.
 https://www.pjrc.com/store/teensy32.html
 
 ![Pot](photos/P110K.jpg)
 
+Small in size, high in quality.
 https://www.digikey.com/en/products/detail/tt-electronics-bi/P110KH-0Y20BR10K/2408865
 
 ![Proto Board](photos/protoboard.jpg)
 
-20 x 80mm 
+20 x 80mm, nothing fancy here, always good to have some laying around.
 https://www.amazon.com/gp/product/B012YZ2Q3W/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1
 
 ![USB](photos/right_angle_usb.jpg)
@@ -33,7 +33,7 @@ https://www.amazon.com/gp/product/B003YKX6WC/ref=ppx_yo_dt_b_asin_title_o01_s00?
 
 ![VHB](photos/VHB_tape.jpg)
 
-Tape to attach to monitor.
+Tape to attach to monitor. 
 https://www.amazon.com/gp/product/B07K4SFP4D/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1
 
 ![M3 Bolt](photos/m3_bolt.jpg)
@@ -42,6 +42,8 @@ m3 x 8mm Screw to hold the electronics in the housing.
 https://www.mcmaster.com/91292A112/
 
 ## Electronics Assembly
+
+SCMM is built on a proto board using 10k potentiometers and a Teensy 3.2 Micro. (SCMM was built with parts I had, I suggest you use the Teensy LC or the Arduino Nano, Pro Micro or Uno if you are ordering new.)
 
 ![Front](photos/circuit_board_front.jpg)
 
@@ -70,6 +72,8 @@ The Upper Bracket is attached to the monitor with VHL tape. I used the 3M VBL 59
 Both the knob and the icons are designed to print two colors using a single filament change.
 
 ## Info about the deej project
+
+https://github.com/omriharel/deej
 
 deej is an **open-source hardware volume mixer** for Windows and Linux PCs. It lets you use real-life sliders (like a DJ!) to **seamlessly control the volumes of different apps** (such as your music player, the game you're playing and your voice chat session) without having to stop what you're doing.
 
