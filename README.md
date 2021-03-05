@@ -62,6 +62,8 @@ Soild wire used for all connections. There is a bit of assembly order. Make the 
 
 ## Case
 
+Both Fusion 360 and STEP files are in the CAD folder
+
 ![Case Render](renders/case_assembly.png)
 
 ![Case Render Back](renders/case_assembly_back.png)
@@ -69,7 +71,7 @@ Soild wire used for all connections. There is a bit of assembly order. Make the 
 
 ![Print](photos/print.jpg)
 
-All parts are designed with printing in mind and do not need any support.
+All parts are designed with printing in mind and do not need any support. I used a Prusa i3 mk3s with Prusa Slicer, 0.2 layer height, PETG.
 
 
 ![Brackets](renders/brackets.png)
